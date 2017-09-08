@@ -15,18 +15,18 @@ import Foundation
  */
 public final class Promise<Value> {
   
-  private typealias Callback = ((Result<Value>) -> ())
+  fileprivate typealias Callback = ((Result<Value>) -> ())
   
-  private var callbacks = [Callback]()
+  fileprivate var callbacks = [Callback]()
   
-  private var state: Result<Value>? = nil {
+  fileprivate var state: Result<Value>? = nil {
     didSet {
       guard let state = self.state else { return }
       callbacks.forEach { $0(state) }
     }
   }
   
-  private init(state: Result<Value>) {
+  fileprivate init(state: Result<Value>) {
     self.state = state
   }
   
