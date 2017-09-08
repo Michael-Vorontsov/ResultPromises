@@ -13,7 +13,7 @@ import Foundation
  
  Provide reach possibilities to provide multyple completion handlers for sync operations separate for results and errors, and to chain as monads multyple async operations.
  */
-final class Promise<Value> {
+public final class Promise<Value> {
   
   private typealias Callback = ((Result<Value>) -> ())
   
@@ -30,7 +30,7 @@ final class Promise<Value> {
     self.state = state
   }
   
-  init () { }
+  public init () { }
 }
 
 //MARK: -Resolution
@@ -38,23 +38,23 @@ extension Promise
 {
   /**
    Resolve promise with Result wrapper
- */
-  func resolve(state: Result<Value>) {
+   */
+  public func resolve(state: Result<Value>) {
     guard nil == self.state else { return }
     self.state = state
   }
   
   /**
    Resolve promise with success state
- */
-  func resolve(result: Value) {
+   */
+  public func resolve(result: Value) {
     self.resolve(state: .success(value: result))
   }
   
   /**
    Resolve promise with error
- */
-  func resolve(error: Error) {
+   */
+  public func resolve(error: Error) {
     self.resolve(state: .failure(error: error))
   }
 }
@@ -63,12 +63,13 @@ extension Promise
 extension Promise {
   
   /**
-  Provide complation block to be called when promise resolved to success state.
+   Provide complation block to be called when promise resolved to success state.
    Usefull for presenting results to user.
    Mutiple completion blocks can be chained.
    Completion block had to be executed on current queue.
-  */
-  @discardableResult func onSuccess(handler: @escaping (Value)->()) -> Promise<Value> {
+   */
+  @discardableResult
+  public func onSuccess(handler: @escaping (Value)->()) -> Promise<Value> {
     // If promise already completed
     
     if let state = self.state {
@@ -100,7 +101,8 @@ extension Promise {
    Mutiple completion blocks can be chained.
    Completion block had to be executed on current queue.
    */
-  @discardableResult func onError(handler: @escaping (Error)->()) -> Promise<Value> {
+  @discardableResult
+  public func onError(handler: @escaping (Error)->()) -> Promise<Value> {
     if let state = self.state {
       switch state {
       case .success(_):
@@ -130,7 +132,8 @@ extension Promise {
    Mutiple completion blocks can be chained.
    Completion block had to be executed on current queue.
    */
-@discardableResult func onComplete(handler: @escaping (Result<Value>)->()) -> Promise<Value> {
+  @discardableResult
+  public func onComplete(handler: @escaping (Result<Value>)->()) -> Promise<Value> {
     if let state = state {
       handler(state)
       return self
@@ -151,7 +154,7 @@ extension Promise {
 extension Promise {
   
   //*map
-  func then<U>(mapper: @escaping ((Value) throws -> U)) -> Promise<U> {
+  public func then<U>(mapper: @escaping ((Value) throws -> U)) -> Promise<U> {
     let nextPromise = Promise<U>()
     callbacks.append { (state) -> () in
       switch state {
@@ -170,7 +173,7 @@ extension Promise {
   }
   
   //*stateFlatMap
-  func then<U>(mapper: @escaping ((Value) -> Result<U>)) -> Promise<U> {
+  public func then<U>(mapper: @escaping ((Value) -> Result<U>)) -> Promise<U> {
     let nextPromise = Promise<U>()
     callbacks.append { (state) -> () in
       switch state {
@@ -182,7 +185,7 @@ extension Promise {
   }
   
   //*promiseFlatMap
-  func then<U>(mapper: @escaping ((Value) -> Promise<U>)) -> Promise<U> {
+  public func then<U>(mapper: @escaping ((Value) -> Promise<U>)) -> Promise<U> {
     let nextPromise = Promise<U>()
     callbacks.append { (state) -> () in
       switch state {

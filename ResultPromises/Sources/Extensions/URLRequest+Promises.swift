@@ -11,16 +11,14 @@ import Foundation
 /**
  Usable HTTP methods
  */
-enum HttpMethod: String {
+public enum HttpMethod: String {
   case get = "GET"
   case post = "POST"
   case put = "PUT"
   case delete = "DELETE"
 }
 
-typealias Headers = [String : String]
-
-enum RequestsError: Error {
+public enum RequestsError: Error {
   case URLGeneration
   case serialization
   case toBeDone // Functionality not implemented yet
@@ -31,11 +29,11 @@ extension URLRequest {
    Generate request asynchonously.
    Can be useful if big data had be serialized
  */
-  static func requestFor(
+  public static func requestFor(
     path: String,
     method: HttpMethod = .get,
     parameters: [String : Any]? = nil,
-    headers: Headers? = nil,
+    headers: [String : String]? = nil,
     dispatchQueue: DispatchQueue = DispatchQueue.global(qos: .userInitiated)
   ) -> Promise<URLRequest> {
   

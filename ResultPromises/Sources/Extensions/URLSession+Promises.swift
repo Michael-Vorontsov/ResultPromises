@@ -11,7 +11,7 @@ import Foundation
 /**
  Enum of most possible errors
  */
-enum NetworkError: Error {
+public enum NetworkError: Error {
   case request
   case network(error: Error?)
   case deserilisation(error: Error?)
@@ -25,7 +25,7 @@ enum NetworkError: Error {
 
 extension URLSession {
   
-  func fetch(from request: URLRequest) -> Promise<(Data?, HTTPURLResponse)> {
+  public func fetch(from request: URLRequest) -> Promise<(Data?, HTTPURLResponse)> {
     let promise = Promise<(Data?, HTTPURLResponse)>()
     self.dataTask(with: request) { (data, response, error) in
       guard error == nil else {
@@ -45,7 +45,7 @@ extension URLSession {
   /**
    Fetch general data using request.
   */
-  func fetchData(from request: URLRequest) -> Promise<Data> {
+  public func fetchData(from request: URLRequest) -> Promise<Data> {
     return self.fetch(from: request).then { (data, response) -> Data in
       guard (200 ... 299 ~= response.statusCode) else {
         throw NetworkError.http(code: response.statusCode)
@@ -61,7 +61,7 @@ extension URLSession {
   /**
    Generic function for Fetching JSON data and converting it into expectyed object
    */
-  func fetchRESTObject<O: Decodable>(from request: URLRequest, decoder: JSONDecoder = JSONDecoder()) -> Promise<O> {
+  public func fetchRESTObject<O: Decodable>(from request: URLRequest, decoder: JSONDecoder = JSONDecoder()) -> Promise<O> {
     return fetchData(from: request).then{ (data) -> O in
       do {
         return try decoder.decode(O.self, from: data)
