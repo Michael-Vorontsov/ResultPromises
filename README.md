@@ -82,4 +82,9 @@ or even request and convert into generic codable object in one go
 
 ### Please take a look on Source code, unti tests and examples for more details.
 
+## Usage
+To run example project just open project in Example/iOS folder, and run on simulaltor.
+
+## Instalation
+
 

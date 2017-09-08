@@ -15,10 +15,10 @@ Pod::Spec.new do |s|
 Provide generic Result and Promises types, that allows to organise async calls as sequance of events and monades. Promises can be mixed with  other Promises, Results and throwable closures.
                        DESC
 
-  s.homepage         = 'https://github.com/Mykhailo-Vorontsov-owo/ResultPromises'
+  s.homepage         = 'https://github.com/Michael-Vorontsov/ResultPromises'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Mykhailo Vorontsov' => 'michel06@ukr.net' }
-  s.source           = { :git => 'https://github.com/Mykhailo-Vorontsov-owo/ResultPromises.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/Michael-Vorontsov/ResultPromises.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
 
