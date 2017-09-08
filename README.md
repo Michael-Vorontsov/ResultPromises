@@ -87,4 +87,22 @@ To run example project just open project in Example/iOS folder, and run on simul
 
 ## Instalation
 
+### Carthage
+
+add to carthage file:
+```
+github "Michael-Vorontsov/ResultPromises"
+```
+
+### CocoaPods
+```
+pod ‘ResultPromises’, :git => 'https://github.com/Michael-Vorontsov/ResultPromises.git'
+```
+
+## Author
+Michael Vorontsov, michel06@ukr.net
+
+## License
+ResultPromises is avaialble under MIT license.
+Please see LICENSE file for additional details.
 
