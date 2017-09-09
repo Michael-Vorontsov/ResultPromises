@@ -1,3 +1,4 @@
+![Header](https://media.giphy.com/media/3ov9jMeeN8Ig5Jn9GU/giphy.gif)
 #  ResultPromises
 
 Helps to orginize asynchonouse calls in form of functional monads.
