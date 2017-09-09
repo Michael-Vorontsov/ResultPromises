@@ -27,6 +27,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D036F29B1F642E1900637B95 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		D036F29D1F64359F00637B95 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		D08B5BAC1F630D90002E517C /* ResultPromises.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = ResultPromises.podspec; sourceTree = "<group>"; };
 		D08C32071F62F8C200F4EDA1 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D0E569CA1F62C1EE002892ED /* ResultPromises.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ResultPromises.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,11 +62,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D036F29E1F6438F700637B95 /* Metafiles */ = {
+			isa = PBXGroup;
+			children = (
+				D036F29D1F64359F00637B95 /* CHANGELOG.md */,
+				D036F29B1F642E1900637B95 /* Package.swift */,
+				D08B5BAC1F630D90002E517C /* ResultPromises.podspec */,
+				D08C32071F62F8C200F4EDA1 /* README.md */,
+			);
+			name = Metafiles;
+			sourceTree = "<group>";
+		};
 		D0E569C01F62C1EE002892ED = {
 			isa = PBXGroup;
 			children = (
-				D08B5BAC1F630D90002E517C /* ResultPromises.podspec */,
-				D08C32071F62F8C200F4EDA1 /* README.md */,
+				D036F29E1F6438F700637B95 /* Metafiles */,
 				D0E569CC1F62C1EE002892ED /* ResultPromises */,
 				D0E569D71F62C1EF002892ED /* ResultPromisesTests */,
 				D0E569CB1F62C1EE002892ED /* Products */,
