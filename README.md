@@ -1,5 +1,6 @@
 ![Header](https://media.giphy.com/media/3ov9jMeeN8Ig5Jn9GU/giphy.gif)
 #  ResultPromises
+![Travice Badge](https://travis-ci.org/Michael-Vorontsov/ResultPromises.svg?branch=master)
 
 Helps to organise asynchronous calls in form of functional monads.
 
