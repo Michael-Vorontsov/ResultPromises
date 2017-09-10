@@ -40,7 +40,10 @@ extension Promise
    Resolve promise with Result wrapper
    */
   public func resolve(state: Result<Value>) {
-    guard nil == self.state else { return }
+    guard nil == self.state else {
+      print("Warning: Promise already resolved to \(self.state!)")
+      return
+    }
     self.state = state
   }
   
