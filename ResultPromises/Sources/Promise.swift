@@ -141,7 +141,7 @@ extension Promise {
     callbacks.append { (state) -> () in
       if OperationQueue.current != currentQueue {
         currentQueue.addOperation { handler(state) }
-      } else {x
+      } else {
         handler(state)
       }
     }
