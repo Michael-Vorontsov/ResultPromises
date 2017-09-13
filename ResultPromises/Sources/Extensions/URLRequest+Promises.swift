@@ -26,7 +26,7 @@ public enum RequestsError: Error {
 
 extension URLRequest {
   /**
-   Generate request asynchonously.
+   Generate request asynchronously.
    Can be useful if big data had be serialized
  */
   public static func requestFor(
@@ -38,7 +38,7 @@ extension URLRequest {
   ) -> Promise<URLRequest> {
   
     let promise = Promise<URLRequest>()
-    // Can be bid depends on data and parameters, so better to run at background
+    // Can depends on data and parameters, so better to run at background
     dispatchQueue.async {
       guard
         let url = URL(string: path)

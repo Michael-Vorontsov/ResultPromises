@@ -26,10 +26,6 @@ public final class Promise<Value> {
     }
   }
   
-  fileprivate init(state: Result<Value>) {
-    self.state = state
-  }
-  
   public init () { }
 }
 
@@ -66,7 +62,7 @@ extension Promise
 extension Promise {
   
   /**
-   Provide complation block to be called when promise resolved to success state.
+   Provide completion block to be called when promise resolved to success state.
    Usefull for presenting results to user.
    Mutiple completion blocks can be chained.
    Completion block had to be executed on current queue.
@@ -99,7 +95,7 @@ extension Promise {
   }
   
   /**
-   Provide complation block to be called when promise resolved to error state.
+   Provide completion block to be called when promise resolved to error state.
    Usefull for presenting error message.
    Mutiple completion blocks can be chained.
    Completion block had to be executed on current queue.
@@ -130,7 +126,7 @@ extension Promise {
   }
   
   /**
-   Provide complation block to be called when promise resolved to any state.
+   Provide completion block to be called when promise resolved to any state.
    Usefull for changing activity indicator.
    Mutiple completion blocks can be chained.
    Completion block had to be executed on current queue.
@@ -145,7 +141,7 @@ extension Promise {
     callbacks.append { (state) -> () in
       if OperationQueue.current != currentQueue {
         currentQueue.addOperation { handler(state) }
-      } else {
+      } else {x
         handler(state)
       }
     }
