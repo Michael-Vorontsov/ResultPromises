@@ -25,7 +25,7 @@ final private class PromiseTests: XCTestCase {
     super.tearDown()
   }
   
-  func testThenAtoB() {
+  func testThenAtoTypeB() {
     var promiseAResult: String? = nil
     
     let promiseA = Promise<String>()
@@ -34,7 +34,7 @@ final private class PromiseTests: XCTestCase {
       return string.characters.count
     }
     var promiseBResult: Int? = nil
-    _ = promiseB.onSuccess{ result in
+    promiseB.onSuccess{ result in
       promiseBResult = result
     }
     let testString = "Test"
@@ -42,6 +42,25 @@ final private class PromiseTests: XCTestCase {
     XCTAssertEqual(promiseAResult, testString)
     XCTAssertEqual(promiseBResult, testString.characters.count)
   }
+
+  func testAFileThenBFail() {
+    
+    
+    let promiseA = Promise<String>()
+    var promiseBNotExecuted = true
+    let promiseB = promiseA.then { string -> (Int) in
+      promiseBNotExecuted = false
+      return 0
+    }
+    var promiseBExpectedError: Error?  = nil
+    promiseB.onError { (error) in
+      promiseBExpectedError = error
+    }
+    promiseA.resolve(error: TestError.test)
+    XCTAssertTrue(promiseBNotExecuted)
+    XCTAssertNotNil(promiseBExpectedError)
+  }
+  
   
   func testCompletionOnSucceess() {
     
@@ -87,6 +106,30 @@ final private class PromiseTests: XCTestCase {
     }
   }
   
+  func testSuccesNotExecutedOnFail() {
+    
+    let promiseA = Promise<String>()
+    var successTriggered = false
+    _ = promiseA.onSuccess{ _ in
+      successTriggered = true
+    }
+    
+    promiseA.resolve(error: TestError.test)
+    XCTAssertFalse(successTriggered)
+  }
+  
+  func testFailNotExecutedOnSuccess() {
+    
+    let promiseA = Promise<String>()
+    var errorTriggered = false
+    _ = promiseA.onError{ _ in
+      errorTriggered = true
+    }
+    
+    promiseA.resolve(result: "Test")
+    XCTAssertFalse(errorTriggered)
+  }
+
   func testCompletionOrderOnSuccess() {
     
     var callbackOrder = [String]()
@@ -385,5 +428,192 @@ final private class PromiseTests: XCTestCase {
     XCTAssertNotNil(promiseBError)
   }
   
+  func testResolutionHandlersAfterSuccess() {
+    
+    var completionState: Result<String>?
+    var successString: String?
+    var failError: Error?
+    let testString = "Test"
+    let promiseA = Promise<String>()
+    promiseA.resolve(result: testString)
+    
+    _ = promiseA
+      .onSuccess { (string) in
+        successString = string
+      }
+      .onComplete { (state) in
+        completionState = state
+      }
+      .onError{ (error) in
+        failError = error
+      }
+    
+    guard let state = completionState else {
+      XCTFail("completion state not given")
+      return
+    }
+    
+    XCTAssertNotNil(successString)
+    XCTAssertNotNil(completionState)
+    XCTAssertNil(failError)
+    if case Result<String>.success(let string) = state {
+      XCTAssertEqual(string, testString)
+    }
+    else {
+      XCTFail("completion state should be Result.succees")
+    }
+  }
+  
+  func testResolutionHandlersAfterFail() {
+    
+    var completionState: Result<String>?
+    var successString: String?
+    var failError: Error?
+    let promiseA = Promise<String>()
+    promiseA.resolve(error: TestError.test)
+    
+    _ = promiseA
+      .onSuccess { (string) in
+        successString = string
+      }
+      .onComplete { (state) in
+        completionState = state
+      }
+      .onError{ (error) in
+        failError = error
+    }
+    
+    XCTAssertNil(successString)
+    XCTAssertNotNil(completionState)
+    XCTAssertNotNil(failError)
+  }
+  
+  func testFailResolutionAfterSuccessDoNothing() {
+    var completionState: Result<String>?
+    var successString: String?
+    var failError: Error?
+    let testString = "Test"
+    let promiseA = Promise<String>()
+    
+    _ = promiseA
+      .onSuccess { (string) in
+        successString = string
+      }
+      .onComplete { (state) in
+        completionState = state
+      }
+      .onError{ (error) in
+        failError = error
+    }
+    promiseA.resolve(result: testString)
+    promiseA.resolve(error: TestError.test)
+
+    guard let state = completionState else {
+      XCTFail("completion state not given")
+      return
+    }
+    
+    XCTAssertNotNil(successString)
+    XCTAssertNotNil(completionState)
+    XCTAssertNil(failError)
+    if case Result<String>.success(let string) = state {
+      XCTAssertEqual(string, testString)
+    }
+    else {
+      XCTFail("completion state should be Result.succees")
+    }
+  }
+
+  func testSuccessResolutionAfterFailDoNothing() {
+    var completionState: Result<String>?
+    var successString: String?
+    var failError: Error?
+    let testString = "Test"
+    let promiseA = Promise<String>()
+    
+    _ = promiseA
+      .onSuccess { (string) in
+        successString = string
+      }
+      .onComplete { (state) in
+        completionState = state
+      }
+      .onError{ (error) in
+        failError = error
+    }
+    promiseA.resolve(error: TestError.test)
+    promiseA.resolve(result: testString)
+    
+    XCTAssertNil(successString)
+    XCTAssertNotNil(completionState)
+    XCTAssertNotNil(failError)
+  }
+
+  func testSuccessResolutionAfterSuccessDoNothing() {
+    var completionState: Result<String>?
+    var successString: String?
+    var failError: Error?
+    let testStringA = "TestA"
+    let testStringB = "TestA"
+    let promiseA = Promise<String>()
+    
+    _ = promiseA
+      .onSuccess { (string) in
+        successString = string
+      }
+      .onComplete { (state) in
+        completionState = state
+      }
+      .onError{ (error) in
+        failError = error
+    }
+    promiseA.resolve(result: testStringA)
+    promiseA.resolve(result: testStringB)
+
+    guard let state = completionState else {
+      XCTFail("completion state not given")
+      return
+    }
+    
+    XCTAssertNotNil(successString)
+    XCTAssertNotNil(completionState)
+    XCTAssertNil(failError)
+    if case Result<String>.success(let string) = state {
+      XCTAssertEqual(string, testStringA)
+    }
+    else {
+      XCTFail("completion state should be Result.succees")
+    }
+  }
+  
+  
+  func testResolutionHandlersOnMainThread() {
+    
+    let promiseA = Promise<String>()
+    let expMain = expectation(description: "Completion called on main")
+
+    promiseA
+      .onSuccess { (string) in
+        XCTAssertTrue(Thread.current.isMainThread)
+      }
+      .onComplete { (state) in
+        XCTAssertTrue(Thread.current.isMainThread)
+      }
+      .then { (string) -> Int in
+        // then executing on same thread as resolution
+        XCTAssertFalse(Thread.current.isMainThread)
+        throw TestError.test
+      }
+      .onError { (error) in
+        expMain.fulfill()
+        XCTAssertTrue(Thread.current.isMainThread)
+      }
+    
+    DispatchQueue.global(qos: .default).async {
+      promiseA.resolve(error: TestError.test)
+    }
+    waitForExpectations(timeout: 1000.0, handler: nil)
+  }
+
 }
 

@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.summary          = 'Promises for orginising asychronouse operation like sequences.'
 
   s.description      = <<-DESC
-Provide generic Result and Promises types, that allows to organise async calls as sequance of events and monades. Promises can be mixed with  other Promises, Results and throwable closures.
+Provide generic Result and Promises types, that allows to organise async calls as sequence of events and monads. Promises can be mixed with  other Promises, Results and throwable closures.
                        DESC
 
   s.homepage         = 'https://github.com/Michael-Vorontsov/ResultPromises'

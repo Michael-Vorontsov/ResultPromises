@@ -21,8 +21,6 @@ public enum NetworkError: Error {
   case other(error: Error)
 }
 
-//typealias NetworkError = NetworkErrors
-
 extension URLSession {
   
   public func fetch(from request: URLRequest) -> Promise<(Data?, HTTPURLResponse)> {
@@ -59,7 +57,7 @@ extension URLSession {
   }
   
   /**
-   Generic function for Fetching JSON data and converting it into expectyed object
+   Generic function for Fetching JSON data and converting it into expected object
    */
   public func fetchRESTObject<O: Decodable>(from request: URLRequest, decoder: JSONDecoder = JSONDecoder()) -> Promise<O> {
     return fetchData(from: request).then{ (data) -> O in
