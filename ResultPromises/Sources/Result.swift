@@ -18,9 +18,15 @@ public enum Result<T> {
 
 public extension Result {
   //* Allows to use results wrappers as Monads, to unite them in mapping chain
-  public func map<U>(mapper: (T)->U) -> Result<U> {
+  public func map<U>(mapper: (T) throws ->U) -> Result<U> {
     switch self {
-    case .success(let result): return .success(value: mapper(result))
+    case .success(let result):
+      do {
+        return try .success(value: mapper(result))
+      }
+      catch {
+        return .failure(error: error)
+      }
     case .failure(let error): return .failure(error: error)
     }
   }
