@@ -42,10 +42,16 @@ extension String {
 
 extension URLRequest {
 
-  /**
-   Generate request asynchronously.
-   Can be useful if big data had be serialized
- */
+  ///  Generate request asynchronously.
+  /// Can be useful if big data had be serialized
+  ///
+  /// - Parameters:
+  ///   - path: full remote path
+  ///   - method: http method (GET, POST, PUT etc.)
+  ///   - parameters: Dictionary of parameters
+  ///   - headers: Dictionary of Headers
+  ///   - dispatchQueue: queue for performing request into
+  /// - Returns: Promise for generating URL request shcduled for in BG thread
   public static func requestFor(
     path: String,
     method: HttpMethod = .get,
@@ -75,12 +81,14 @@ extension URLRequest {
       if let parameters = parameters, parameters.count > 0 {
         switch method {
         case .post, .put:
+          // Add parameters as JSON in body
           guard let body = try? JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted) else {
             return promise.resolve(error: RequestsError.serialization)
           }
           request.httpBody = body
           
         case .get, .delete:
+          // Add parameters to URL
           var parametersString = path.contains("?") ? "&" : "?"
 
           for (key, value) in parameters {

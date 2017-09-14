@@ -32,9 +32,9 @@ public final class Promise<Value> {
 //MARK: -Resolution
 extension Promise
 {
-  /**
-   Resolve promise with Result wrapper
-   */
+  /// Resolve promise with Result wrapper
+  ///
+  /// - Parameter state: Result state with wrapped object. (success or failure)
   public func resolve(state: Result<Value>) {
     guard nil == self.state else {
       print("Warning: Promise already resolved to \(self.state!)")
@@ -43,16 +43,16 @@ extension Promise
     self.state = state
   }
   
-  /**
-   Resolve promise with success state
-   */
+  /// Resolve promise to success with object
+  ///
+  /// - Parameter result: result object
   public func resolve(result: Value) {
     self.resolve(state: .success(value: result))
   }
   
-  /**
-   Resolve promise with error
-   */
+  /// Resolve promise to failure with error
+  ///
+  /// - Parameter error: error
   public func resolve(error: Error) {
     self.resolve(state: .failure(error: error))
   }
@@ -65,7 +65,11 @@ extension Promise {
    Provide completion block to be called when promise resolved to success state.
    Usefull for presenting results to user.
    Mutiple completion blocks can be chained.
+   
    Completion block had to be executed on current queue.
+   
+   - Parameter handler: success handler with resolved parameter
+   - Returns: self (discardable)
    */
   @discardableResult
   public func onSuccess(handler: @escaping (Value)->()) -> Promise<Value> {
@@ -98,7 +102,11 @@ extension Promise {
    Provide completion block to be called when promise resolved to error state.
    Usefull for presenting error message.
    Mutiple completion blocks can be chained.
+   
    Completion block had to be executed on current queue.
+   
+   - Parameter handler: error handler with error parameter in it called in case of error
+   - Returns: self (discardable)
    */
   @discardableResult
   public func onError(handler: @escaping (Error)->()) -> Promise<Value> {
@@ -129,7 +137,11 @@ extension Promise {
    Provide completion block to be called when promise resolved to any state.
    Usefull for changing activity indicator.
    Mutiple completion blocks can be chained.
+   
    Completion block had to be executed on current queue.
+   
+   - Parameter handler: resolution handler with Result parameter.
+   - Returns: self (discardable)
    */
   @discardableResult
   public func onComplete(handler: @escaping (Result<Value>)->()) -> Promise<Value> {
@@ -152,7 +164,14 @@ extension Promise {
 //MARK: - Monads
 extension Promise {
   
-  //*map
+  /// Result map for simple convertion on result into another.
+  /// Usable when sychronous convertion needed with different throwable calls.
+  ///
+  /// If self resolved to Error, promise created by this function will be resolved to same error automatically
+  /// without invoking provided mapper
+  ///
+  /// - Parameter mapper: Generic mapper to convert one result into another, with possibility to throw an exception
+  /// - Returns: Promise to return Generic object
   public func then<U>(mapper: @escaping ((Value) throws -> U)) -> Promise<U> {
     let nextPromise = Promise<U>()
     callbacks.append { (state) -> () in
@@ -171,7 +190,14 @@ extension Promise {
     return nextPromise
   }
   
-  //*stateFlatMap
+  /// Result map for promise.
+  /// Usable when synchronous code with complecated logic and and possible error combinations
+  ///
+  /// If self resolved to Error, promise created by this function will be resolved to same error automatically
+  /// without invoking provided mapper
+  ///
+  /// - Parameter mapper: Generic mapper to convert current success value into new Result
+  /// - Returns: Promise to return Generic object
   public func then<U>(mapper: @escaping ((Value) -> Result<U>)) -> Promise<U> {
     let nextPromise = Promise<U>()
     callbacks.append { (state) -> () in
@@ -184,6 +210,14 @@ extension Promise {
   }
   
   //*promiseFlatMap
+  /// Flat map for promise.
+  /// Usable when asynchronous call needed
+  ///
+  /// If self resolved to Error, promise created by this function will be resolved to same error automatically
+  /// without invoking provided mapper
+  ///
+  /// - Parameter mapper: Handler that had to return new promise based on successful resolution of current one
+  /// - Returns: Promise to return Generic object.
   public func then<U>(mapper: @escaping ((Value) -> Promise<U>)) -> Promise<U> {
     let nextPromise = Promise<U>()
     callbacks.append { (state) -> () in

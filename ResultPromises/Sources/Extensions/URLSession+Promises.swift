@@ -8,21 +8,29 @@
 
 import Foundation
 
-/**
- Enum of most possible errors
- */
+/// Enum of most possible errors
+///
+/// - request: Request related errors
+/// - network: Errors related to executing network request by URLSession. Original error embedded, if available.
+/// - deserialisation: Errors related to converting Data into Decodable object. Original error embedded, if available.
+/// - missedData: Expected raw data is empty.
+/// - http: Server answer code is out of Success range (200...299) Original network code embedded.
+/// - other: Wrapper for all other Errors.
 public enum NetworkError: Error {
   case request
   case network(error: Error?)
-  case deserilisation(error: Error?)
+  case deserialisation(error: Error?)
   case missedData
-  case wrongData
   case http(code: Int)
   case other(error: Error)
 }
 
 extension URLSession {
   
+  /// Fetch raw data and URL response
+  ///
+  /// - Parameter request: URL request
+  /// - Returns: Promise to fetch optional Data and HTTPResponse
   public func fetch(from request: URLRequest) -> Promise<(Data?, HTTPURLResponse)> {
     let promise = Promise<(Data?, HTTPURLResponse)>()
     self.dataTask(with: request) { (data, response, error) in
@@ -40,9 +48,10 @@ extension URLSession {
     return promise
   }
   
-  /**
-   Fetch general data using request.
-  */
+  /// Fetch raw data from URL request.
+  ///
+  /// - Parameter request: URL request
+  /// - Returns: Promise to fetch raw Data from network
   public func fetchData(from request: URLRequest) -> Promise<Data> {
     return self.fetch(from: request).then { (data, response) -> Data in
       guard (200 ... 299 ~= response.statusCode) else {
@@ -56,15 +65,18 @@ extension URLSession {
     }
   }
   
-  /**
-   Generic function for Fetching JSON data and converting it into expected object
-   */
+  /// Fetching JSON data and converting it into expected object
+  ///
+  /// - Parameters:
+  ///   - request: URL reques
+  ///   - decoder: decoder (additional setup can be required), Standard JSONDecoder by default
+  /// - Returns: Promise to fetch decodable object
   public func fetchRESTObject<O: Decodable>(from request: URLRequest, decoder: JSONDecoder = JSONDecoder()) -> Promise<O> {
     return fetchData(from: request).then{ (data) -> O in
       do {
         return try decoder.decode(O.self, from: data)
       } catch {
-        throw NetworkError.deserilisation(error: error)
+        throw NetworkError.deserialisation(error: error)
       }
     }
   }
