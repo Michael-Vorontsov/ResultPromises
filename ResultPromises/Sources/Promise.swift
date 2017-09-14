@@ -17,6 +17,8 @@ public final class Promise<Value> {
   
   fileprivate typealias Callback = ((Result<Value>) -> ())
   
+  private var lock = NSLock()
+  
   fileprivate var callbacks = [Callback]()
   
   fileprivate var state: Result<Value>? = nil {
@@ -36,6 +38,10 @@ extension Promise
   ///
   /// - Parameter state: Result state with wrapped object. (success or failure)
   public func resolve(state: Result<Value>) {
+    lock.lock()
+    defer {
+      self.lock.unlock()
+    }
     guard nil == self.state else {
       print("Warning: Promise already resolved to \(self.state!)")
       return
@@ -74,7 +80,10 @@ extension Promise {
   @discardableResult
   public func onSuccess(handler: @escaping (Value)->()) -> Promise<Value> {
     // If promise already completed
-    
+    lock.lock()
+    defer {
+      self.lock.unlock()
+    }
     if let state = self.state {
       switch state {
       case .success(let value):
@@ -110,6 +119,10 @@ extension Promise {
    */
   @discardableResult
   public func onError(handler: @escaping (Error)->()) -> Promise<Value> {
+    lock.lock()
+    defer {
+      self.lock.unlock()
+    }
     if let state = self.state {
       switch state {
       case .success(_):
@@ -145,6 +158,10 @@ extension Promise {
    */
   @discardableResult
   public func onComplete(handler: @escaping (Result<Value>)->()) -> Promise<Value> {
+    lock.lock()
+    defer {
+      self.lock.unlock()
+    }
     if let state = state {
       handler(state)
       return self
@@ -173,6 +190,10 @@ extension Promise {
   /// - Parameter mapper: Generic mapper to convert one result into another, with possibility to throw an exception
   /// - Returns: Promise to return Generic object
   public func then<U>(mapper: @escaping ((Value) throws -> U)) -> Promise<U> {
+    lock.lock()
+    defer {
+      self.lock.unlock()
+    }
     let nextPromise = Promise<U>()
     let callback: Callback = { (state) -> () in
       switch state {
@@ -205,6 +226,11 @@ extension Promise {
   /// - Parameter mapper: Generic mapper to convert current success value into new Result
   /// - Returns: Promise to return Generic object
   public func then<U>(mapper: @escaping ((Value) -> Result<U>)) -> Promise<U> {
+    lock.lock()
+    defer {
+      self.lock.unlock()
+    }
+
     let nextPromise = Promise<U>()
     let callback: Callback = { (state) -> () in
       switch state {
@@ -231,6 +257,11 @@ extension Promise {
   /// - Parameter mapper: Handler that had to return new promise based on successful resolution of current one
   /// - Returns: Promise to return Generic object.
   public func then<U>(mapper: @escaping ((Value) -> Promise<U>)) -> Promise<U> {
+    lock.lock()
+    defer {
+      self.lock.unlock()
+    }
+
     let nextPromise = Promise<U>()
     let callback: Callback = { (state) -> () in
       switch state {
