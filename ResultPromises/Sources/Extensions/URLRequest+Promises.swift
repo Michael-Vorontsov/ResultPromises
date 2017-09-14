@@ -14,6 +14,7 @@ import Foundation
 public enum HttpMethod: String {
   case get = "GET"
   case post = "POST"
+  // FIXME: Implement support for additional methods
   case put = "PUT"
   case delete = "DELETE"
 }
@@ -24,7 +25,23 @@ public enum RequestsError: Error {
   case toBeDone // Functionality not implemented yet
 }
 
+extension String {
+  /**
+   Helper to provide allowed characters for URL path encoding
+   */
+  func httpEncodedString() -> String {
+    let generalDelimitersToEncode = ":#[]@"
+    let subDelimitersToEncode = "!$&'()*+,;="
+    // does not include "?" or "/" due to RFC 3986 - Section 3.4
+    var allowedCharacterSet = CharacterSet.urlQueryAllowed
+    allowedCharacterSet.remove(charactersIn: generalDelimitersToEncode)
+    allowedCharacterSet.remove(charactersIn: subDelimitersToEncode)
+    return self.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) ?? self
+  }
+}
+
 extension URLRequest {
+
   /**
    Generate request asynchronously.
    Can be useful if big data had be serialized
@@ -55,7 +72,7 @@ extension URLRequest {
         }
       }
       
-      if let parameters = parameters {
+      if let parameters = parameters, parameters.count > 0 {
         switch method {
         case .post, .put:
           guard let body = try? JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted) else {
@@ -64,8 +81,15 @@ extension URLRequest {
           request.httpBody = body
           
         case .get, .delete:
-          // TODO: Implement
-          return promise.resolve(error: RequestsError.toBeDone)
+          var parametersString = path.contains("?") ? "&" : "?"
+
+          for (key, value) in parameters {
+            parametersString.append("\(key.httpEncodedString())=\(String(describing: value).httpEncodedString())&")
+          }
+          parametersString.removeLast()
+          if let extendedURL = URL(string: path + parametersString) {
+            request.url = extendedURL
+          }
         }
       }
       promise.resolve(result: request)

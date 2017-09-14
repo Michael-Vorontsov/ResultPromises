@@ -9,7 +9,7 @@
 import XCTest
 @testable import ResultPromises
 
-private final class URLSession_ExtensionTets: XCTestCase {
+private final class URLSessionExtensionTets: XCTestCase {
   
   struct TestReminder: Codable {
     let userId: Int
