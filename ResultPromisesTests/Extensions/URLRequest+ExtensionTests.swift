@@ -10,29 +10,20 @@ import XCTest
 
 class URLRequestExtensionTests: XCTestCase {
   
-  override func setUp() {
-    super.setUp()
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-  }
-  
-  override func tearDown() {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    super.tearDown()
-  }
-  
   let defaultPath = "http://google.com"
   
   func testSimpleRequestFromPath() {
     let requestPromise = URLRequest.requestFor(path: defaultPath)
     let exp = expectation(description: "Request generation")
-    requestPromise.onSuccess { (request) in
-      XCTAssertEqual(request.url?.absoluteString, self.defaultPath)
-      XCTAssertEqual(request.httpMethod, "GET")
-      XCTAssertNil(request.httpBody)
-      XCTAssertEqual(request.allHTTPHeaderFields?.count ?? 0, 0)
-      exp.fulfill()
+    requestPromise
+      .onSuccess { (request) in
+        XCTAssertEqual(request.url?.absoluteString, self.defaultPath)
+        XCTAssertEqual(request.httpMethod, "GET")
+        XCTAssertNil(request.httpBody)
+        XCTAssertEqual(request.allHTTPHeaderFields?.count ?? 0, 0)
+        exp.fulfill()
       }
-    wait(for: [exp], timeout: 0.1)
+    wait(for: [exp], timeout: 1.0)
   }
   
   func testRequestWithHeaders() {
@@ -43,7 +34,7 @@ class URLRequestExtensionTests: XCTestCase {
       XCTAssertEqual(request.allHTTPHeaderFields?["key"], "value")
       exp.fulfill()
     }
-    wait(for: [exp], timeout: 0.1)
+    wait(for: [exp], timeout: 1.0)
   }
   
   func testGetRequestWithParameters() {
@@ -64,7 +55,7 @@ class URLRequestExtensionTests: XCTestCase {
       .onComplete { (_) in
         exp.fulfill()
       }
-    wait(for: [exp], timeout: 0.1)
+    wait(for: [exp], timeout: 1.0)
   }
   
   func testPostRequestWithParameters() {
@@ -84,7 +75,7 @@ class URLRequestExtensionTests: XCTestCase {
       .onComplete { (_) in
         exp.fulfill()
     }
-    wait(for: [exp], timeout: 0.1)
+    wait(for: [exp], timeout: 1.0)
   }
   
 }

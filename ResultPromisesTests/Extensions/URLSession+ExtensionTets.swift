@@ -20,20 +20,9 @@ private final class URLSessionExtensionTets: XCTestCase {
   
   let session = URLSession.shared
   
-  override func setUp() {
-    super.setUp()
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-  }
-  
-  override func tearDown() {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    super.tearDown()
-  }
-  
   func testCorrectJSONObjectRetrival() {
-    let request = URLRequest(url: URL(string: "https://jsonplaceholder.typicode.com/todos")!)
     
-    let fetchPromise: Promise<[TestReminder]> = session.fetchRESTObject(from: request)
+    let fetchPromise: Promise<[TestReminder]> = session.fetchRESTObject(from: "https://jsonplaceholder.typicode.com/todos")
     
     let exp = expectation(description: "Network request")
     
@@ -58,9 +47,7 @@ private final class URLSessionExtensionTets: XCTestCase {
   }
 
   func testIncorrectJSONObjectRetrival() {
-    let request = URLRequest(url: URL(string: "https://jsonplaceholder.typicode.com/users")!)
-    
-    let fetchPromise: Promise<[TestReminder]> = session.fetchRESTObject(from: request)
+    let fetchPromise: Promise<[TestReminder]> = session.fetchRESTObject(from: "https://jsonplaceholder.typicode.com/users")
     
     let exp = expectation(description: "Network request")
     
@@ -87,9 +74,7 @@ private final class URLSessionExtensionTets: XCTestCase {
   }
 
   func testServersideErrorRetrival() {
-    let request = URLRequest(url: URL(string: "http://google.co.uk/unexpected_request")!)
-    
-    let fetchPromise: Promise<[TestReminder]> = session.fetchRESTObject(from: request)
+    let fetchPromise: Promise<[TestReminder]> = session.fetchRESTObject(from: "http://google.co.uk/unexpected_request")
     
     let exp = expectation(description: "Network request")
     
@@ -115,5 +100,29 @@ private final class URLSessionExtensionTets: XCTestCase {
     }
     wait(for: [exp], timeout: 5.0)
   }
-  
+
+  func testAInvalidAddressErrorRetrival() {
+    let fetchPromise: Promise<[TestReminder]> = session.fetchRESTObject(from: "Incorect address")
+    
+    let exp = expectation(description: "Network request")
+    
+    fetchPromise
+      .onSuccess { (listOfReminders) in
+        XCTFail("Expectipn expected!")
+      }
+      .onError { (error) in
+        switch error {
+        case NetworkError.request:
+          // Expected error
+          break
+        default:
+          XCTFail("Unexpected exception: \(error.localizedDescription)")
+        }
+      }
+      .onComplete { _ in
+        exp.fulfill()
+      }
+    wait(for: [exp], timeout: 5.0)
+  }
+
 }

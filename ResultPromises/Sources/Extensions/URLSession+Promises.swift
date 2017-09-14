@@ -29,10 +29,14 @@ extension URLSession {
   
   /// Fetch raw data and URL response
   ///
-  /// - Parameter request: URL request
+  /// - Parameter request: URL request. Can be URLRequest, URL or even Path
   /// - Returns: Promise to fetch optional Data and HTTPResponse
-  public func fetch(from request: URLRequest) -> Promise<(Data?, HTTPURLResponse)> {
+  public func fetch(from request: URLRequestable) -> Promise<(Data?, HTTPURLResponse)> {
     let promise = Promise<(Data?, HTTPURLResponse)>()
+    guard let request = request.urlRequest() else {
+      promise.resolve(error: NetworkError.request)
+      return promise
+    }
     self.dataTask(with: request) { (data, response, error) in
       guard error == nil else {
         promise.resolve(error: NetworkError.network(error: error))
@@ -44,22 +48,22 @@ extension URLSession {
         return
       }
       promise.resolve(result: (data, response))
-    }.resume()
+      }.resume()
     return promise
   }
   
   /// Fetch raw data from URL request.
   ///
-  /// - Parameter request: URL request
+  /// - Parameter request: URL request. Can be URLRequest, URL or even Path
   /// - Returns: Promise to fetch raw Data from network
-  public func fetchData(from request: URLRequest) -> Promise<Data> {
+  public func fetchData(from request: URLRequestable) -> Promise<Data> {
     return self.fetch(from: request).then { (data, response) -> Data in
       guard (200 ... 299 ~= response.statusCode) else {
         throw NetworkError.http(code: response.statusCode)
       }
       
       guard let data = data, data.count > 0 else {
-          throw NetworkError.missedData
+        throw NetworkError.missedData
       }
       return data
     }
@@ -68,10 +72,10 @@ extension URLSession {
   /// Fetching JSON data and converting it into expected object
   ///
   /// - Parameters:
-  ///   - request: URL reques
+  ///   - request: URL requestable. Can be URLRequest, URL or even Path
   ///   - decoder: decoder (additional setup can be required), Standard JSONDecoder by default
   /// - Returns: Promise to fetch decodable object
-  public func fetchRESTObject<O: Decodable>(from request: URLRequest, decoder: JSONDecoder = JSONDecoder()) -> Promise<O> {
+  public func fetchRESTObject<O: Decodable>(from request: URLRequestable, decoder: JSONDecoder = JSONDecoder()) -> Promise<O> {
     return fetchData(from: request).then{ (data) -> O in
       do {
         return try decoder.decode(O.self, from: data)
