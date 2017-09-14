@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D079DB731F69E5BD00E95404 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E569E41F62C20F002892ED /* Result.swift */; };
+		D079DB761F6A85AD00E95404 /* URLSession+ExtensionTets.swift in Sources */ = {isa = PBXBuildFile; fileRef = D079DB751F6A85AD00E95404 /* URLSession+ExtensionTets.swift */; };
 		D0E3ADFE1F69E441000E2A4D /* ResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E3ADFD1F69E441000E2A4D /* ResultTests.swift */; };
 		D0E569D41F62C1EF002892ED /* ResultPromises.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0E569CA1F62C1EE002892ED /* ResultPromises.framework */; };
 		D0E569D91F62C1EF002892ED /* PromiseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E569D81F62C1EF002892ED /* PromiseTests.swift */; };
@@ -30,6 +31,7 @@
 /* Begin PBXFileReference section */
 		D036F29B1F642E1900637B95 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		D036F29D1F64359F00637B95 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		D079DB751F6A85AD00E95404 /* URLSession+ExtensionTets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+ExtensionTets.swift"; sourceTree = "<group>"; };
 		D08B5BAC1F630D90002E517C /* ResultPromises.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = ResultPromises.podspec; sourceTree = "<group>"; };
 		D08C32071F62F8C200F4EDA1 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D0E3ADFD1F69E441000E2A4D /* ResultTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultTests.swift; sourceTree = "<group>"; };
@@ -75,6 +77,14 @@
 			name = Metafiles;
 			sourceTree = "<group>";
 		};
+		D079DB741F6A858C00E95404 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D079DB751F6A85AD00E95404 /* URLSession+ExtensionTets.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		D0E569C01F62C1EE002892ED = {
 			isa = PBXGroup;
 			children = (
@@ -107,6 +117,7 @@
 		D0E569D71F62C1EF002892ED /* ResultPromisesTests */ = {
 			isa = PBXGroup;
 			children = (
+				D079DB741F6A858C00E95404 /* Extensions */,
 				D0E3ADFD1F69E441000E2A4D /* ResultTests.swift */,
 				D0E569D81F62C1EF002892ED /* PromiseTests.swift */,
 				D0E569DA1F62C1EF002892ED /* Info.plist */,
@@ -255,6 +266,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D079DB761F6A85AD00E95404 /* URLSession+ExtensionTets.swift in Sources */,
 				D0E3ADFE1F69E441000E2A4D /* ResultTests.swift in Sources */,
 				D0E569D91F62C1EF002892ED /* PromiseTests.swift in Sources */,
 			);
