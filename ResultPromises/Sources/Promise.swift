@@ -174,7 +174,7 @@ extension Promise {
   /// - Returns: Promise to return Generic object
   public func then<U>(mapper: @escaping ((Value) throws -> U)) -> Promise<U> {
     let nextPromise = Promise<U>()
-    callbacks.append { (state) -> () in
+    let callback: Callback = { (state) -> () in
       switch state {
       case .success(let result):
         do {
@@ -186,6 +186,12 @@ extension Promise {
         }
       case .failure(let error):  nextPromise.state = .failure(error: error)
       }
+    }
+    if let state = state {
+      callback(state)
+    }
+    else {
+      callbacks.append(callback)
     }
     return nextPromise
   }
@@ -200,11 +206,17 @@ extension Promise {
   /// - Returns: Promise to return Generic object
   public func then<U>(mapper: @escaping ((Value) -> Result<U>)) -> Promise<U> {
     let nextPromise = Promise<U>()
-    callbacks.append { (state) -> () in
+    let callback: Callback = { (state) -> () in
       switch state {
       case .success(let result): nextPromise.state = mapper(result)
       case .failure(let error):  nextPromise.state = .failure(error: error)
       }
+    }
+    if let state = state {
+      callback(state)
+    }
+    else {
+      callbacks.append(callback)
     }
     return nextPromise
   }
@@ -220,7 +232,7 @@ extension Promise {
   /// - Returns: Promise to return Generic object.
   public func then<U>(mapper: @escaping ((Value) -> Promise<U>)) -> Promise<U> {
     let nextPromise = Promise<U>()
-    callbacks.append { (state) -> () in
+    let callback: Callback = { (state) -> () in
       switch state {
       case .success(let result):
         _ = mapper(result)
@@ -233,6 +245,12 @@ extension Promise {
         
       case .failure(let error):  nextPromise.state = .failure(error: error)
       }
+    }
+    if let state = state {
+      callback(state)
+    }
+    else {
+      callbacks.append(callback)
     }
     return nextPromise
   }

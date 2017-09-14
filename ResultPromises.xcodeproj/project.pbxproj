@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D04D3D271F6AD33500FDDE93 /* URLRequestable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04D3D261F6AD33500FDDE93 /* URLRequestable.swift */; };
+		D04D3D291F6AD57500FDDE93 /* URLRequestableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04D3D281F6AD57500FDDE93 /* URLRequestableTests.swift */; };
 		D079DB731F69E5BD00E95404 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E569E41F62C20F002892ED /* Result.swift */; };
 		D079DB761F6A85AD00E95404 /* URLSession+ExtensionTets.swift in Sources */ = {isa = PBXBuildFile; fileRef = D079DB751F6A85AD00E95404 /* URLSession+ExtensionTets.swift */; };
 		D079DB781F6A982F00E95404 /* URLRequest+ExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D079DB771F6A982F00E95404 /* URLRequest+ExtensionTests.swift */; };
@@ -32,6 +34,8 @@
 /* Begin PBXFileReference section */
 		D036F29B1F642E1900637B95 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		D036F29D1F64359F00637B95 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		D04D3D261F6AD33500FDDE93 /* URLRequestable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequestable.swift; sourceTree = "<group>"; };
+		D04D3D281F6AD57500FDDE93 /* URLRequestableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequestableTests.swift; sourceTree = "<group>"; };
 		D079DB751F6A85AD00E95404 /* URLSession+ExtensionTets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+ExtensionTets.swift"; sourceTree = "<group>"; };
 		D079DB771F6A982F00E95404 /* URLRequest+ExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+ExtensionTests.swift"; sourceTree = "<group>"; };
 		D08B5BAC1F630D90002E517C /* ResultPromises.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = ResultPromises.podspec; sourceTree = "<group>"; };
@@ -84,6 +88,7 @@
 			children = (
 				D079DB751F6A85AD00E95404 /* URLSession+ExtensionTets.swift */,
 				D079DB771F6A982F00E95404 /* URLRequest+ExtensionTests.swift */,
+				D04D3D281F6AD57500FDDE93 /* URLRequestableTests.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -143,6 +148,7 @@
 			children = (
 				D0E569EB1F62C58C002892ED /* URLSession+Promises.swift */,
 				D0E569ED1F62CDBC002892ED /* URLRequest+Promises.swift */,
+				D04D3D261F6AD33500FDDE93 /* URLRequestable.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -259,6 +265,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0E569EC1F62C58C002892ED /* URLSession+Promises.swift in Sources */,
+				D04D3D271F6AD33500FDDE93 /* URLRequestable.swift in Sources */,
 				D0E569EE1F62CDBC002892ED /* URLRequest+Promises.swift in Sources */,
 				D079DB731F69E5BD00E95404 /* Result.swift in Sources */,
 				D0E569E91F62C25B002892ED /* Promise.swift in Sources */,
@@ -270,6 +277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D079DB761F6A85AD00E95404 /* URLSession+ExtensionTets.swift in Sources */,
+				D04D3D291F6AD57500FDDE93 /* URLRequestableTests.swift in Sources */,
 				D079DB781F6A982F00E95404 /* URLRequest+ExtensionTests.swift in Sources */,
 				D0E3ADFE1F69E441000E2A4D /* ResultTests.swift in Sources */,
 				D0E569D91F62C1EF002892ED /* PromiseTests.swift in Sources */,

@@ -15,16 +15,6 @@ final private class PromiseTests: XCTestCase {
     case test
   }
   
-  override func setUp() {
-    super.setUp()
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-  }
-  
-  override func tearDown() {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    super.tearDown()
-  }
-  
   func testThenAtoTypeB() {
     var promiseAResult: String? = nil
     
@@ -42,7 +32,7 @@ final private class PromiseTests: XCTestCase {
     XCTAssertEqual(promiseAResult, testString)
     XCTAssertEqual(promiseBResult, testString.characters.count)
   }
-
+  
   func testAFileThenBFail() {
     
     
@@ -129,7 +119,7 @@ final private class PromiseTests: XCTestCase {
     promiseA.resolve(result: "Test")
     XCTAssertFalse(errorTriggered)
   }
-
+  
   func testCompletionOrderOnSuccess() {
     
     var callbackOrder = [String]()
@@ -446,7 +436,7 @@ final private class PromiseTests: XCTestCase {
       }
       .onError{ (error) in
         failError = error
-      }
+    }
     
     guard let state = completionState else {
       XCTFail("completion state not given")
@@ -462,6 +452,58 @@ final private class PromiseTests: XCTestCase {
     else {
       XCTFail("completion state should be Result.succees")
     }
+  }
+  
+  func testThenSequenceAfterSuccess() {
+    
+    let testString = "Test"
+    let promiseA = Promise<String>()
+    promiseA.resolve(result: testString)
+    let exp = expectation(description: "Chain executed")
+    
+    promiseA
+      .then { (string) -> String in
+        return string
+      }
+      .then { (string) -> Result<String> in
+        return .success(value: string)
+      }
+      .then { (string) -> Promise<String> in
+        let newPromise = Promise<String>()
+        newPromise.resolve(result: string)
+        return newPromise
+      }
+      .onSuccess { (string) in
+        XCTAssertEqual(testString, string)
+        exp.fulfill()
+    }
+    wait(for: [exp], timeout: 0.01)
+  }
+  
+  func testThenSequenceAfterError() {
+    
+    let promiseA = Promise<String>()
+    promiseA.resolve(error: TestError.test)
+    let exp = expectation(description: "Chain executed")
+    
+    promiseA
+      .then { (string) -> String in
+        XCTFail("Unexpected call")
+        return string
+      }
+      .then { (string) -> Result<String> in
+        XCTFail("Unexpected call")
+        return .success(value: string)
+      }
+      .then { (string) -> Promise<String> in
+        XCTFail("Unexpected call")
+        return Promise<String>()
+      }
+      .onError { (error) in
+        exp.fulfill()
+    }
+    
+    wait(for: [exp], timeout: 0.01)
   }
   
   func testResolutionHandlersAfterFail() {
@@ -507,7 +549,7 @@ final private class PromiseTests: XCTestCase {
     }
     promiseA.resolve(result: testString)
     promiseA.resolve(error: TestError.test)
-
+    
     guard let state = completionState else {
       XCTFail("completion state not given")
       return
@@ -523,7 +565,7 @@ final private class PromiseTests: XCTestCase {
       XCTFail("completion state should be Result.succees")
     }
   }
-
+  
   func testSuccessResolutionAfterFailDoNothing() {
     var completionState: Result<String>?
     var successString: String?
@@ -548,7 +590,7 @@ final private class PromiseTests: XCTestCase {
     XCTAssertNotNil(completionState)
     XCTAssertNotNil(failError)
   }
-
+  
   func testSuccessResolutionAfterSuccessDoNothing() {
     var completionState: Result<String>?
     var successString: String?
@@ -569,7 +611,7 @@ final private class PromiseTests: XCTestCase {
     }
     promiseA.resolve(result: testStringA)
     promiseA.resolve(result: testStringB)
-
+    
     guard let state = completionState else {
       XCTFail("completion state not given")
       return
@@ -591,7 +633,7 @@ final private class PromiseTests: XCTestCase {
     
     let promiseA = Promise<String>()
     let expMain = expectation(description: "Completion called on main")
-
+    
     promiseA
       .onSuccess { (string) in
         XCTAssertTrue(Thread.current.isMainThread)
@@ -607,13 +649,13 @@ final private class PromiseTests: XCTestCase {
       .onError { (error) in
         expMain.fulfill()
         XCTAssertTrue(Thread.current.isMainThread)
-      }
+    }
     
     DispatchQueue.global(qos: .default).async {
       promiseA.resolve(error: TestError.test)
     }
     waitForExpectations(timeout: 1000.0, handler: nil)
   }
-
+  
 }
 

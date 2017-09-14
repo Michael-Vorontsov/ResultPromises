@@ -14,29 +14,19 @@ final private class ResultTests: XCTestCase {
   enum TestError: Error {
     case test
   }
-
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+  
+  func testResolutionToSuccess() {
+    let stringToTest = "TestString"
+    let toTest = Result<String>.success(value: stringToTest)
+    do {
+      let resolution = try toTest.resolve()
+      XCTAssertEqual(resolution, stringToTest)
     }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+    catch {
+      XCTFail("Unexpected swift exception: \(error)")
     }
-    
-    func testResolutionToSuccess() {
-      let stringToTest = "TestString"
-      let toTest = Result<String>.success(value: stringToTest)
-      do {
-        let resolution = try toTest.resolve()
-        XCTAssertEqual(resolution, stringToTest)
-      }
-      catch {
-        XCTFail("Unexpected swift exception: \(error)")
-      }
-    }
-
+  }
+  
   func testResolutionToError() {
     let toTest = Result<String>.failure(error: TestError.test)
     do {
@@ -58,14 +48,14 @@ final private class ResultTests: XCTestCase {
     
     do {
       let result = try toTest.map { (string) -> Int in
-          return stringToTest.characters.count
+        return stringToTest.characters.count
         }.resolve()
       XCTAssertEqual(stringToTest.characters.count, result)
     }
     catch {
       XCTFail("Unexpected swift exception: \(error)")
     }
-
+    
   }
   
   func testSuccessMapToFail() {
@@ -74,8 +64,8 @@ final private class ResultTests: XCTestCase {
     
     do {
       _ = try toTest.map { (string) -> Int in
-          throw TestError.test
-      }.resolve()
+        throw TestError.test
+        }.resolve()
       XCTFail("Execption should be thrown earlier")
     }
     catch {
@@ -95,7 +85,7 @@ final private class ResultTests: XCTestCase {
       _ = try toTest.map { (string) -> Int in
         XCTFail("Unreachable code!")
         return 0
-      }.resolve()
+        }.resolve()
       XCTFail("Unreachable code!")
     }
     catch {
@@ -106,7 +96,7 @@ final private class ResultTests: XCTestCase {
         XCTFail("Wrong error thrown: \(error)")
       }
     }
-
+    
   }
   
   func testSuccessFlatToSuccess() {
@@ -165,6 +155,6 @@ final private class ResultTests: XCTestCase {
     }
     
   }
-
-
+  
+  
 }
