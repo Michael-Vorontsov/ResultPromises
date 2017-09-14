@@ -73,7 +73,7 @@ private final class URLSessionExtensionTets: XCTestCase {
         // If network error happened - perhaps it means that no connection established
         case NetworkError.network(let embeddedError):
           print("WARKING: Unexpected network error encoutered. It is not indication of failing test yet.\n \(embeddedError?.localizedDescription ?? "<Empty>")")
-        case NetworkError.deserilisation(_):
+        case NetworkError.deserialisation(_):
           // Expected error
           break
         default:
