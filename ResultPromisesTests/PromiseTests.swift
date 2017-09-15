@@ -34,8 +34,7 @@ final private class PromiseTests: XCTestCase {
   }
   
   func testAFileThenBFail() {
-    
-    
+
     let promiseA = Promise<String>()
     var promiseBNotExecuted = true
     let promiseB = promiseA.then { string -> (Int) in
@@ -56,7 +55,7 @@ final private class PromiseTests: XCTestCase {
     
     var completionState: Result<String>?
     let promiseA = Promise<String>()
-    _ = promiseA.onComplete { (state) in
+    promiseA.onComplete { (state) in
       completionState = state
     }
     
@@ -79,7 +78,7 @@ final private class PromiseTests: XCTestCase {
     
     var completionState: Result<String>?
     let promiseA = Promise<String>()
-    _ = promiseA.onComplete { (state) in
+    promiseA.onComplete { (state) in
       completionState = state
     }
     
@@ -100,7 +99,7 @@ final private class PromiseTests: XCTestCase {
     
     let promiseA = Promise<String>()
     var successTriggered = false
-    _ = promiseA.onSuccess{ _ in
+    promiseA.onSuccess{ _ in
       successTriggered = true
     }
     
@@ -112,7 +111,7 @@ final private class PromiseTests: XCTestCase {
     
     let promiseA = Promise<String>()
     var errorTriggered = false
-    _ = promiseA.onError{ _ in
+    promiseA.onError{ _ in
       errorTriggered = true
     }
     
@@ -125,7 +124,7 @@ final private class PromiseTests: XCTestCase {
     var callbackOrder = [String]()
     
     let promiseA = Promise<String>()
-    _ = promiseA
+    promiseA
       .onComplete { _ in
         callbackOrder.append("onCompletion1")
       }
@@ -171,7 +170,7 @@ final private class PromiseTests: XCTestCase {
     }
     var promiseBResult: Int? = nil
     var promiseBError: Error? = nil
-    _ = promiseB
+    promiseB
       .onSuccess{ result in
         promiseBResult = result
       }
@@ -203,7 +202,7 @@ final private class PromiseTests: XCTestCase {
     
     var promiseBResult: Int? = nil
     var promiseBError: Error? = nil
-    _ = promiseB
+    promiseB
       .onSuccess{ result in
         promiseBResult = result
       }
@@ -231,7 +230,7 @@ final private class PromiseTests: XCTestCase {
     }
     var promiseBResult: Int? = nil
     let exp = self.expectation(description: "Success!")
-    _ = promiseB.onSuccess{ result in
+    promiseB.onSuccess{ result in
       promiseBResult = result
       succesInMainThread =  Thread.isMainThread
       exp.fulfill()
@@ -258,7 +257,7 @@ final private class PromiseTests: XCTestCase {
       return .success(value: string.characters.count)
     }
     var promiseBResult: Int? = nil
-    _ = promiseB.onSuccess{ result in
+    promiseB.onSuccess{ result in
       promiseBResult = result
     }
     let testString = "Test"
@@ -285,7 +284,7 @@ final private class PromiseTests: XCTestCase {
     }
     var promiseBResult: Int? = nil
     var promiseBError: Error? = nil
-    _ = promiseB
+    promiseB
       .onSuccess{ result in
         promiseBResult = result
       }
@@ -317,7 +316,7 @@ final private class PromiseTests: XCTestCase {
     
     var promiseBResult: Int? = nil
     var promiseBError: Error? = nil
-    _ = promiseB
+    promiseB
       .onSuccess{ result in
         promiseBResult = result
       }
@@ -344,7 +343,7 @@ final private class PromiseTests: XCTestCase {
       return promiseBInner
     }
     var promiseBResult: Int? = nil
-    _ = promiseB.onSuccess{ result in
+    promiseB.onSuccess{ result in
       promiseBResult = result
     }
     let testString = "Test"
@@ -371,7 +370,7 @@ final private class PromiseTests: XCTestCase {
     }
     var promiseBResult: Int? = nil
     var promiseBError: Error? = nil
-    _ = promiseB
+    promiseB
       .onSuccess{ result in
         promiseBResult = result
       }
@@ -404,7 +403,7 @@ final private class PromiseTests: XCTestCase {
     
     var promiseBResult: Int? = nil
     var promiseBError: Error? = nil
-    _ = promiseB
+    promiseB
       .onSuccess{ result in
         promiseBResult = result
       }
@@ -427,7 +426,7 @@ final private class PromiseTests: XCTestCase {
     let promiseA = Promise<String>()
     promiseA.resolve(result: testString)
     
-    _ = promiseA
+    promiseA
       .onSuccess { (string) in
         successString = string
       }
@@ -514,7 +513,7 @@ final private class PromiseTests: XCTestCase {
     let promiseA = Promise<String>()
     promiseA.resolve(error: TestError.test)
     
-    _ = promiseA
+    promiseA
       .onSuccess { (string) in
         successString = string
       }
@@ -537,7 +536,7 @@ final private class PromiseTests: XCTestCase {
     let testString = "Test"
     let promiseA = Promise<String>()
     
-    _ = promiseA
+    promiseA
       .onSuccess { (string) in
         successString = string
       }
@@ -573,7 +572,7 @@ final private class PromiseTests: XCTestCase {
     let testString = "Test"
     let promiseA = Promise<String>()
     
-    _ = promiseA
+    promiseA
       .onSuccess { (string) in
         successString = string
       }
@@ -599,7 +598,7 @@ final private class PromiseTests: XCTestCase {
     let testStringB = "TestA"
     let promiseA = Promise<String>()
     
-    _ = promiseA
+    promiseA
       .onSuccess { (string) in
         successString = string
       }
