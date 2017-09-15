@@ -31,7 +31,7 @@ final private class ResultTests: XCTestCase {
     let toTest = Result<String>.failure(error: TestError.test)
     do {
       _ = try toTest.resolve()
-      XCTFail("Execption should be thrown earlier")
+      XCTFail("Exception should be thrown earlier")
     } catch {
       switch error {
       case TestError.test:
@@ -66,7 +66,7 @@ final private class ResultTests: XCTestCase {
       _ = try toTest.map { (string) -> Int in
         throw TestError.test
         }.resolve()
-      XCTFail("Execption should be thrown earlier")
+      XCTFail("Exception should be thrown earlier")
     }
     catch {
       switch error {
@@ -123,7 +123,7 @@ final private class ResultTests: XCTestCase {
       _ = try toTest.flatMap{ (string) -> Result<Int> in
         return .failure(error: TestError.test)
         }.resolve()
-      XCTFail("Execption should be thrown earlier")
+      XCTFail("Exception should be thrown earlier")
     }
     catch {
       switch error {

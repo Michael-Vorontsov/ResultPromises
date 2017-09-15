@@ -17,7 +17,7 @@ public final class Promise<Value> {
   
   fileprivate typealias Callback = ((Result<Value>) -> ())
   
-  private var lock = NSLock()
+  fileprivate var lock = NSLock()
   
   fileprivate var callbacks = [Callback]()
   
