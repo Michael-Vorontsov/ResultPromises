@@ -14,9 +14,9 @@ import Foundation
 public enum HttpMethod: String {
   case get = "GET"
   case post = "POST"
-  // FIXME: Implement support for additional methods
   case put = "PUT"
   case delete = "DELETE"
+    // FIXME: Implement support for additional methods
 }
 
 public enum RequestsError: Error {

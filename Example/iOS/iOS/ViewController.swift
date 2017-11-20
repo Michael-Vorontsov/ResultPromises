@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ResultPromises
 
 final class ViewController: UITableViewController {
   
@@ -25,8 +26,11 @@ final class ViewController: UITableViewController {
   }
   
   @IBAction func pullToRefreshAction(_ sender: Any) {
+    //! Launch reload function, with artificial delay 2.0 sconds, and artificial failure on every 5th load.
     reloadData(delay: 2.0, errorSimulationCounter: 5)
+//! Replace line above with line below to launch native-style reload procedure
 //    oldReload()
+//! Replace first line of this fucntion with line below to run request without artificial errors and delays.
 //    reloadData()
   }
   

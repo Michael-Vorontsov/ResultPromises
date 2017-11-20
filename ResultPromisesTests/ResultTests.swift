@@ -48,9 +48,9 @@ final private class ResultTests: XCTestCase {
     
     do {
       let result = try toTest.map { (string) -> Int in
-        return stringToTest.characters.count
+        return stringToTest.count
         }.resolve()
-      XCTAssertEqual(stringToTest.characters.count, result)
+      XCTAssertEqual(stringToTest.count, result)
     }
     catch {
       XCTFail("Unexpected swift exception: \(error)")
@@ -105,9 +105,9 @@ final private class ResultTests: XCTestCase {
     
     do {
       let result = try toTest.flatMap{ (string) -> Result<Int> in
-        return .success(value: string.characters.count)
+        return .success(value: string.count)
         }.resolve()
-      XCTAssertEqual(stringToTest.characters.count, result)
+      XCTAssertEqual(stringToTest.count, result)
     }
     catch {
       XCTFail("Unexpected swift exception: \(error)")

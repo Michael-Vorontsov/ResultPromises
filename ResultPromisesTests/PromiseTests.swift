@@ -21,7 +21,7 @@ final private class PromiseTests: XCTestCase {
     let promiseA = Promise<String>()
     let promiseB = promiseA.then { string -> (Int) in
       promiseAResult = string
-      return string.characters.count
+      return string.count
     }
     var promiseBResult: Int? = nil
     promiseB.onSuccess{ result in
@@ -30,7 +30,7 @@ final private class PromiseTests: XCTestCase {
     let testString = "Test"
     promiseA.resolve(result: testString)
     XCTAssertEqual(promiseAResult, testString)
-    XCTAssertEqual(promiseBResult, testString.characters.count)
+    XCTAssertEqual(promiseBResult, testString.count)
   }
   
   func testAFileThenBFail() {
@@ -166,7 +166,7 @@ final private class PromiseTests: XCTestCase {
       .then { string -> (Int) in
         promiseAResult = string
         thenAtoBIngnored = true
-        return string.characters.count
+        return string.count
     }
     var promiseBResult: Int? = nil
     var promiseBError: Error? = nil
@@ -197,7 +197,7 @@ final private class PromiseTests: XCTestCase {
       }
       .then { string -> Int in
         XCTAssertEqual(promiseAResult, string)
-        return string.characters.count
+        return string.count
     }
     
     var promiseBResult: Int? = nil
@@ -226,7 +226,7 @@ final private class PromiseTests: XCTestCase {
     let promiseB = promiseA.then { string -> (Int) in
       promiseAResult = string
       thenInMainThread = Thread.isMainThread
-      return string.characters.count
+      return string.count
     }
     var promiseBResult: Int? = nil
     let exp = self.expectation(description: "Success!")
@@ -241,7 +241,7 @@ final private class PromiseTests: XCTestCase {
     }
     wait(for: [exp], timeout: 0.1)
     XCTAssertEqual(promiseAResult, testString)
-    XCTAssertEqual(promiseBResult, testString.characters.count)
+    XCTAssertEqual(promiseBResult, testString.count)
     XCTAssertEqual(succesInMainThread, true)
     XCTAssertEqual(thenInMainThread, false)
   }
@@ -254,7 +254,7 @@ final private class PromiseTests: XCTestCase {
     let promiseA = Promise<String>()
     let promiseB = promiseA.then { string -> Result<Int> in
       promiseAResult = string
-      return .success(value: string.characters.count)
+      return .success(value: string.count)
     }
     var promiseBResult: Int? = nil
     promiseB.onSuccess{ result in
@@ -263,7 +263,7 @@ final private class PromiseTests: XCTestCase {
     let testString = "Test"
     promiseA.resolve(result: testString)
     XCTAssertEqual(promiseAResult, testString)
-    XCTAssertEqual(promiseBResult, testString.characters.count)
+    XCTAssertEqual(promiseBResult, testString.count)
   }
   
   func testFlatAFailure() {
@@ -280,7 +280,7 @@ final private class PromiseTests: XCTestCase {
       .then { string -> Result<Int> in
         promiseAResult = string
         thenAtoBIngnored = true
-        return .success(value: string.characters.count)
+        return .success(value: string.count)
     }
     var promiseBResult: Int? = nil
     var promiseBError: Error? = nil
@@ -311,7 +311,7 @@ final private class PromiseTests: XCTestCase {
       }
       .then { string -> (Int) in
         XCTAssertEqual(promiseAResult, string)
-        return string.characters.count
+        return string.count
     }
     
     var promiseBResult: Int? = nil
@@ -339,7 +339,7 @@ final private class PromiseTests: XCTestCase {
     let promiseB = promiseA.then { string -> Promise<Int> in
       promiseAResult = string
       let promiseBInner = Promise<Int>()
-      promiseBInner.resolve(result: string.characters.count)
+      promiseBInner.resolve(result: string.count)
       return promiseBInner
     }
     var promiseBResult: Int? = nil
@@ -349,7 +349,7 @@ final private class PromiseTests: XCTestCase {
     let testString = "Test"
     promiseA.resolve(result: testString)
     XCTAssertEqual(promiseAResult, testString)
-    XCTAssertEqual(promiseBResult, testString.characters.count)
+    XCTAssertEqual(promiseBResult, testString.count)
   }
   
   func testFlatPromiseAFailure() {
@@ -365,7 +365,7 @@ final private class PromiseTests: XCTestCase {
       .then { string -> Promise<Int> in
         promiseAResult = string
         let promiseBInner = Promise<Int>()
-        promiseBInner.resolve(result: string.characters.count)
+        promiseBInner.resolve(result: string.count)
         return promiseBInner
     }
     var promiseBResult: Int? = nil
@@ -397,7 +397,7 @@ final private class PromiseTests: XCTestCase {
       .then { string -> Promise<Int> in
         XCTAssertEqual(promiseAResult, string)
         let promiseBInner = Promise<Int>()
-        promiseBInner.resolve(result: string.characters.count)
+        promiseBInner.resolve(result: string.count)
         return promiseBInner
     }
     
