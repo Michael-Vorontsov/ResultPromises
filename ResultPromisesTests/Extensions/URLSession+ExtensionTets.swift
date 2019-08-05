@@ -28,7 +28,7 @@ private final class URLSessionExtensionTets: XCTestCase {
     
     fetchPromise
       .onSuccess { (listOfReminders) in
-        XCTAssertEqual(listOfReminders.count , 200)
+        XCTAssertEqual(listOfReminders.count, 200)
       }
       .onError { (error) in
         switch error {

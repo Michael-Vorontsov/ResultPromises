@@ -53,7 +53,7 @@ final private class PromiseTests: XCTestCase {
   
   func testCompletionOnSucceess() {
     
-    var completionState: Result<String>?
+    var completionState: Result<String, Error>?
     let promiseA = Promise<String>()
     promiseA.onComplete { (state) in
       completionState = state
@@ -66,7 +66,7 @@ final private class PromiseTests: XCTestCase {
       return
       
     }
-    if case Result<String>.success(let string) = state {
+    if case Result<String, Error>.success(let string) = state {
       XCTAssertEqual(string, testString)
     }
     else {
@@ -76,7 +76,7 @@ final private class PromiseTests: XCTestCase {
   
   func testCompletionOnFail() {
     
-    var completionState: Result<String>?
+    var completionState: Result<String, Error>?
     let promiseA = Promise<String>()
     promiseA.onComplete { (state) in
       completionState = state
@@ -87,7 +87,7 @@ final private class PromiseTests: XCTestCase {
       XCTFail("completion state not given")
       return
     }
-    if case Result<String>.failure(let error) = state {
+    if case Result<String, Error>.failure(let error) = state {
       XCTAssertEqual(error as? TestError, TestError.test)
     }
     else {
@@ -252,9 +252,9 @@ final private class PromiseTests: XCTestCase {
     var promiseAResult: String? = nil
     
     let promiseA = Promise<String>()
-    let promiseB = promiseA.then { string -> Result<Int> in
+    let promiseB = promiseA.then { string -> Result<Int, Error> in
       promiseAResult = string
-      return .success(value: string.count)
+        return .success(string.count)
     }
     var promiseBResult: Int? = nil
     promiseB.onSuccess{ result in
@@ -277,10 +277,10 @@ final private class PromiseTests: XCTestCase {
       .onSuccess { (string) in
         onSuccessAIgonred = false
       }
-      .then { string -> Result<Int> in
+      .then { string -> Result<Int, Error> in
         promiseAResult = string
         thenAtoBIngnored = true
-        return .success(value: string.count)
+        return .success(string.count)
     }
     var promiseBResult: Int? = nil
     var promiseBError: Error? = nil
@@ -395,6 +395,7 @@ final private class PromiseTests: XCTestCase {
         promiseAResult = string
       }
       .then { string -> Promise<Int> in
+
         XCTAssertEqual(promiseAResult, string)
         let promiseBInner = Promise<Int>()
         promiseBInner.resolve(result: string.count)
@@ -419,7 +420,7 @@ final private class PromiseTests: XCTestCase {
   
   func testResolutionHandlersAfterSuccess() {
     
-    var completionState: Result<String>?
+    var completionState: Result<String, Error>?
     var successString: String?
     var failError: Error?
     let testString = "Test"
@@ -445,7 +446,7 @@ final private class PromiseTests: XCTestCase {
     XCTAssertNotNil(successString)
     XCTAssertNotNil(completionState)
     XCTAssertNil(failError)
-    if case Result<String>.success(let string) = state {
+    if case Result<String, Error>.success(let string) = state {
       XCTAssertEqual(string, testString)
     }
     else {
@@ -464,8 +465,8 @@ final private class PromiseTests: XCTestCase {
       .then { (string) -> String in
         return string
       }
-      .then { (string) -> Result<String> in
-        return .success(value: string)
+      .then { (string) -> Result<String, Error> in
+        return .success(string)
       }
       .then { (string) -> Promise<String> in
         let newPromise = Promise<String>()
@@ -490,9 +491,9 @@ final private class PromiseTests: XCTestCase {
         XCTFail("Unexpected call")
         return string
       }
-      .then { (string) -> Result<String> in
+      .then { (string) -> Result<String, Error> in
         XCTFail("Unexpected call")
-        return .success(value: string)
+        return .success(string)
       }
       .then { (string) -> Promise<String> in
         XCTFail("Unexpected call")
@@ -507,7 +508,7 @@ final private class PromiseTests: XCTestCase {
   
   func testResolutionHandlersAfterFail() {
     
-    var completionState: Result<String>?
+    var completionState: Result<String, Error>?
     var successString: String?
     var failError: Error?
     let promiseA = Promise<String>()
@@ -530,7 +531,7 @@ final private class PromiseTests: XCTestCase {
   }
   
   func testFailResolutionAfterSuccessDoNothing() {
-    var completionState: Result<String>?
+    var completionState: Result<String, Error>?
     var successString: String?
     var failError: Error?
     let testString = "Test"
@@ -557,7 +558,7 @@ final private class PromiseTests: XCTestCase {
     XCTAssertNotNil(successString)
     XCTAssertNotNil(completionState)
     XCTAssertNil(failError)
-    if case Result<String>.success(let string) = state {
+    if case Result<String, Error>.success(let string) = state {
       XCTAssertEqual(string, testString)
     }
     else {
@@ -566,7 +567,7 @@ final private class PromiseTests: XCTestCase {
   }
   
   func testSuccessResolutionAfterFailDoNothing() {
-    var completionState: Result<String>?
+    var completionState: Result<String, Error>?
     var successString: String?
     var failError: Error?
     let testString = "Test"
@@ -591,7 +592,7 @@ final private class PromiseTests: XCTestCase {
   }
   
   func testSuccessResolutionAfterSuccessDoNothing() {
-    var completionState: Result<String>?
+    var completionState: Result<String, Error>?
     var successString: String?
     var failError: Error?
     let testStringA = "TestA"
@@ -619,7 +620,7 @@ final private class PromiseTests: XCTestCase {
     XCTAssertNotNil(successString)
     XCTAssertNotNil(completionState)
     XCTAssertNil(failError)
-    if case Result<String>.success(let string) = state {
+    if case Result<String, Error>.success(let string) = state {
       XCTAssertEqual(string, testStringA)
     }
     else {

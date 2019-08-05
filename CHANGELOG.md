@@ -5,7 +5,14 @@ All notable changes to this project will be documented in this file. ResultsProm
 ---
 
 #### 0.x Betas
+- `0.2.x` Betas - [0.2.0](#020)
 - `0.1.x` Betas - [0.1.0](#010) |  [0.1.1](#011) |  [0.1.2](#012)|  [0.1.3](#013)
+
+---
+## [0.2.0](https://github.com/Michael-Vorontsov/ResultPromises/releases/tag/0.2.0)
+
+#### Switched to Swift 5.0
+- Replace custom Result type by native Swift.Result 
 
 ---
 ## [0.1.3](https://github.com/Michael-Vorontsov/ResultPromises/releases/tag/0.1.3)

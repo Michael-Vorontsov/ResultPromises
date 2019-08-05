@@ -49,8 +49,8 @@ class URLRequestExtensionTests: XCTestCase {
         XCTAssertTrue(fullPath.contains("param1=0"))
         XCTAssertTrue(fullPath.contains("param%202=string%20with%20space"))
       }
-      .onError { (error) in
-        XCTFail("Unexpected error: \(error)")
+        .onError{ error in
+            XCTFail("Unexpected error: \(error)")
       }
       .onComplete { (_) in
         exp.fulfill()
@@ -66,6 +66,7 @@ class URLRequestExtensionTests: XCTestCase {
       parameters: ["param1" : 0, "param 2" : "string with space"]
     )
       .onSuccess { (request) in
+
         XCTAssertEqual(request.url?.absoluteString, self.defaultPath)
         //FixMe: Check body
       }

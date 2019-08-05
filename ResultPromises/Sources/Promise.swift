@@ -15,13 +15,13 @@ import Foundation
  */
 public final class Promise<Value> {
   
-  fileprivate typealias Callback = ((Result<Value>) -> ())
+  fileprivate typealias Callback = ((Result<Value, Error>) -> ())
   
   fileprivate var lock = NSLock()
   
   fileprivate var callbacks = [Callback]()
   
-  fileprivate var state: Result<Value>? = nil {
+  fileprivate var state: Result<Value, Error>? = nil {
     didSet {
       guard let state = self.state else { return }
       callbacks.forEach { $0(state) }
@@ -37,7 +37,7 @@ extension Promise
   /// Resolve promise with Result wrapper
   ///
   /// - Parameter state: Result state with wrapped object. (success or failure)
-  public func resolve(state: Result<Value>) {
+  public func resolve(state: Result<Value, Error>) {
     lock.lock()
     defer {
       self.lock.unlock()
@@ -53,14 +53,14 @@ extension Promise
   ///
   /// - Parameter result: result object
   public func resolve(result: Value) {
-    self.resolve(state: .success(value: result))
+    self.resolve(state: .success(result))
   }
   
   /// Resolve promise to failure with error
   ///
   /// - Parameter error: error
   public func resolve(error: Error) {
-    self.resolve(state: .failure(error: error))
+    self.resolve(state: .failure(error))
   }
 }
 
@@ -118,7 +118,7 @@ extension Promise {
    - Returns: self (discardable)
    */
   @discardableResult
-  public func onError(handler: @escaping (Error)->()) -> Promise<Value> {
+    public func onError(handler: @escaping (Error)->()) -> Promise<Value> {
     lock.lock()
     defer {
       self.lock.unlock()
@@ -135,16 +135,29 @@ extension Promise {
     
     let currentQueue = OperationQueue.current ?? OperationQueue.main
     callbacks.append { (state) -> () in
-      if case .failure(let error) = state {
-        if OperationQueue.current != currentQueue {
-          currentQueue.addOperation { handler(error) }
-        } else {
-          handler(error)
+        if case .failure(let error) = state {
+            if OperationQueue.current != currentQueue {
+                currentQueue.addOperation {
+                    handler(error)
+                }
+            } else {
+                handler(error)
+            }
         }
-      }
     }
     return self
-  }
+    }
+
+    @discardableResult
+    public func onSpecificError<ErrorType: Error>(errorType: ErrorType.Type, handler: @escaping (ErrorType)->()) -> Promise<Value> {
+
+        return self.onError { (error) in
+            if let error = error as? ErrorType {
+                handler(error)
+            }
+        }
+
+    }
   
   /**
    Provide completion block to be called when promise resolved to any state.
@@ -157,7 +170,7 @@ extension Promise {
    - Returns: self (discardable)
    */
   @discardableResult
-  public func onComplete(handler: @escaping (Result<Value>)->()) -> Promise<Value> {
+  public func onComplete(handler: @escaping (Result<Value, Error>)->()) -> Promise<Value> {
     lock.lock()
     defer {
       self.lock.unlock()
@@ -205,7 +218,7 @@ extension Promise {
         catch {
           nextPromise.resolve(error: error)
         }
-      case .failure(let error):  nextPromise.state = .failure(error: error)
+      case .failure(let error):  nextPromise.state = .failure(error)
       }
     }
     if let state = state {
@@ -225,7 +238,7 @@ extension Promise {
   ///
   /// - Parameter mapper: Generic mapper to convert current success value into new Result
   /// - Returns: Promise to return Generic object
-  public func then<U>(mapper: @escaping ((Value) -> Result<U>)) -> Promise<U> {
+  public func then<U>(mapper: @escaping ((Value) -> Result<U, Error>)) -> Promise<U> {
     lock.lock()
     defer {
       self.lock.unlock()
@@ -235,7 +248,7 @@ extension Promise {
     let callback: Callback = { (state) -> () in
       switch state {
       case .success(let result): nextPromise.state = mapper(result)
-      case .failure(let error):  nextPromise.state = .failure(error: error)
+      case .failure(let error):  nextPromise.state = .failure(error)
       }
     }
     if let state = state {
@@ -274,7 +287,7 @@ extension Promise {
             nextPromise.resolve(error: error)
         }
         
-      case .failure(let error):  nextPromise.state = .failure(error: error)
+      case .failure(let error):  nextPromise.state = .failure(error)
       }
     }
     if let state = state {

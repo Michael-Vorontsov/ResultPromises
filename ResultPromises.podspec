@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ResultPromises'
-  s.version          = '0.1.3'
+  s.version          = '0.2.0'
   s.summary          = 'Promises for orginising asychronouse operation like sequences.'
 
   s.description      = <<-DESC
@@ -20,7 +20,7 @@ Provide generic Result and Promises types, that allows to organise async calls a
   s.author           = { 'Mykhailo Vorontsov' => 'michel06@ukr.net' }
   s.source           = { :git => 'https://github.com/Michael-Vorontsov/ResultPromises.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '11.0'
 
   s.source_files = 'ResultPromises/Sources/**/*'
   
