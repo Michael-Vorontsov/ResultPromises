@@ -1,14 +1,20 @@
-//
-//  Package.swift
-//  ResultPromises
-//
-//  Created by Mykhailo Vorontsov on 9/9/17.
-//  Copyright © 2017-2019 Mykhailo Vorontsov. All rights reserved.
-//
+// swift-tools-version:5.1
 
 import PackageDescription
 
 let package = Package(
   name: "ResultPromises",
-  exclude: ["Example"]
+  products: [
+         .library(
+             name: "ResultPromises",
+             targets: ["ResultPromises"]
+        ),
+     ],
+  targets: [
+    .target(
+        name:"ResultPromises",
+        path: "./ResultPromises",
+        sources: ["Sources"]
+    )
+  ]
 )
